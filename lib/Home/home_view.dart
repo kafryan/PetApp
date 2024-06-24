@@ -121,14 +121,45 @@ class _HomeViewState extends State<HomeView> {
                 },
                 icon: Icon(
                   _isAuthenticated ? Icons.fingerprint : Icons.fingerprint,
-                  size: 50,
+                  size: 45,
                 ),
                 color: Colors.white,
                 iconSize: 60,
               ),
               Center(
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (!_isAuthenticated) {
+                      final bool canAuthenticateWithBiometrics =
+                          await _auth.canCheckBiometrics;
+                      if (canAuthenticateWithBiometrics) {
+                        try {
+                          final bool didAuthenticate = await _auth.authenticate(
+                            localizedReason: 'Please authenticate to proceed',
+                            options: const AuthenticationOptions(
+                              biometricOnly: false,
+                            ),
+                          );
+                          setState(() {
+                            _isAuthenticated = didAuthenticate;
+                          });
+                          if (didAuthenticate) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const DetailView()));
+                          }
+                        } catch (e) {
+                          // ignore: avoid_print
+                          print(e);
+                        }
+                      }
+                    } else {
+                      setState(() {
+                        _isAuthenticated = false;
+                      });
+                    }
+                  },
                   icon: SvgPicture.asset(
                     'assets/svgs/faceID.svg',
                     color: Colors.white,

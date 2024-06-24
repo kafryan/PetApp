@@ -57,15 +57,22 @@ class _DetailViewState extends State<DetailView> {
   }
 
   ListView _doctors() {
+    List<DoctorModel> filteredDoctors = filterDoctorsByService(selectedService);
+
     return ListView.separated(
         padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemBuilder: (context, index) => _doctor(doctors[index]),
+        itemBuilder: (context, index) => _doctor(filteredDoctors[index]),
         separatorBuilder: (context, index) => const SizedBox(
               height: 11,
             ),
-        itemCount: doctors.length);
+        itemCount: filteredDoctors.length);
+  }
+
+  List<DoctorModel> filterDoctorsByService(int serviceIndex) {
+    String service = Service.all()[serviceIndex];
+    return doctors.where((doctor) => doctor.service.contains(service)).toList();
   }
 
   Container _doctor(DoctorModel doctorModel) {
