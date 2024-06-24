@@ -9,6 +9,8 @@ import 'package:flutterchallenge/Models/service_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 var selectedService = 0;
+TextEditingController controller = TextEditingController();
+String input = "";
 
 class DetailView extends StatefulWidget {
   const DetailView({super.key});
@@ -56,23 +58,53 @@ class _DetailViewState extends State<DetailView> {
     ];
   }
 
-  ListView _doctors() {
+  Widget _doctors() {
     List<DoctorModel> filteredDoctors = filterDoctorsByService(selectedService);
+    List<DoctorModel> filteredNameDoctors = filteredName(selectedService);
 
-    return ListView.separated(
-        padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemBuilder: (context, index) => _doctor(filteredDoctors[index]),
-        separatorBuilder: (context, index) => const SizedBox(
+    return input.isEmpty
+        ? ListView.separated(
+            padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) => selectedService == 0
+                ? _doctor(doctors[index])
+                : _doctor(filteredDoctors[index]),
+            separatorBuilder: (context, index) => const SizedBox(
               height: 11,
             ),
-        itemCount: filteredDoctors.length);
+            itemCount:
+                selectedService == 0 ? doctors.length : filteredDoctors.length,
+          )
+        : ListView.separated(
+            padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) =>
+                _doctor(filteredNameDoctors[index]),
+            separatorBuilder: (context, index) => const SizedBox(
+              height: 11,
+            ),
+            itemCount: filteredNameDoctors.length,
+          );
   }
 
   List<DoctorModel> filterDoctorsByService(int serviceIndex) {
     String service = Service.all()[serviceIndex];
     return doctors.where((doctor) => doctor.service.contains(service)).toList();
+  }
+
+  List<DoctorModel> filterDoctorByName(String inputName) {
+    List<DoctorModel> listName =
+        doctors.where((doctor) => doctor.name.contains(inputName)).toList();
+    return listName;
+  }
+
+  List<DoctorModel> filteredName(int serviceIndex) {
+    return doctors
+        .where(
+            (doctor) => doctor.name.toLowerCase().contains(input.toLowerCase()))
+        .toList();
   }
 
   Container _doctor(DoctorModel doctorModel) {
@@ -120,6 +152,7 @@ class _DetailViewState extends State<DetailView> {
                   height: 7,
                 ),
                 RichText(
+                    overflow: TextOverflow.ellipsis,
                     text: TextSpan(
                         text: "Service: ${doctorModel.service.join(', ')}",
                         style: GoogleFonts.manrope(
@@ -259,22 +292,23 @@ class _DetailViewState extends State<DetailView> {
                                     fontWeight: FontWeight.w800)),
                           ])),
                   const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 1),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(.4),
-                      border: Border.all(
-                          color: Colors.white.withOpacity(.12), width: 1),
+                  Material(
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'See details',
-                        style: GoogleFonts.manrope(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                    color: Colors.white.withOpacity(.4),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: () {},
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          'See details',
+                          style: GoogleFonts.manrope(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
                       ),
                     ),
                   )
@@ -296,6 +330,13 @@ class _DetailViewState extends State<DetailView> {
         borderRadius: BorderRadius.circular(14),
       ),
       child: TextFormField(
+        controller: controller,
+        onChanged: (value) {
+          setState(() {
+            input = value;
+            filterDoctorByName(input);
+          });
+        },
         decoration: InputDecoration(
             border: InputBorder.none,
             prefixIcon: const Icon(

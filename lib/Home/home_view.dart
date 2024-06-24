@@ -31,7 +31,7 @@ class _HomeViewState extends State<HomeView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(
-                    height: 43,
+                    height: 45,
                   ),
                   Image.asset(
                     'assets/images/Logo.png',
@@ -39,7 +39,7 @@ class _HomeViewState extends State<HomeView> {
                     width: 148,
                   ),
                   const SizedBox(
-                    height: 55,
+                    height: 30,
                   ),
                   RichText(
                     textAlign: TextAlign.center,
