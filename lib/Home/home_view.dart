@@ -86,6 +86,7 @@ class _HomeViewState extends State<HomeView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              //Fingerprint Icon
               IconButton(
                 onPressed: () async {
                   if (!_isAuthenticated) {
@@ -127,6 +128,7 @@ class _HomeViewState extends State<HomeView> {
                 iconSize: 60,
               ),
               Center(
+                //FaceID Icon
                 child: IconButton(
                   onPressed: () async {
                     if (!_isAuthenticated) {
