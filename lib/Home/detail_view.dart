@@ -356,21 +356,42 @@ class _DetailViewState extends State<DetailView> {
   Widget _greetings() {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Hello, Hooman!',
-                style: GoogleFonts.manrope(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF3F3E3F))),
-            IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  FeatherIcons.shoppingBag,
-                  color: Color(0xFF818AF9),
-                ))
-          ],
-        ));
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text('Hello, Hooman!',
+              style: GoogleFonts.manrope(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF3F3E3F))),
+          Center(
+            child: Stack(clipBehavior: Clip.none, children: [
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    FeatherIcons.shoppingBag,
+                    color: Color(0xFF818AF9),
+                    size: 24,
+                  )),
+              Positioned(
+                right: 5,
+                top: 2,
+                child: Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Text(
+                    '2',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ]),
+          ),
+        ]));
   }
 }
